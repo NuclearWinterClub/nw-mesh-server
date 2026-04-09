@@ -1,0 +1,15 @@
+{
+  "name": "nuclear-winter-mesh-server",
+  "version": "1.0.0",
+  "description": "Nuclear Winter MESH Update Bar — WebSocket server + Discord bot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^17.4.1",
+    "express": "^4.18.3",
+    "ws": "^8.16.0"
+  }
+}
