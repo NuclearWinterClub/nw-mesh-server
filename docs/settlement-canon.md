@@ -196,9 +196,9 @@ SE_ALERTS_OVERLAY_ID=your_alerts_overlay_id
 ### Reserved — Haven
 | Field | Value |
 |---|---|
-| **Grid** | TBD |
+| **Grid** | 6-G1 |
 | **Settlement Name** | Haven |
-| **Dead Name** | TBD |
+| **Dead Name** | San Jose, CA |
 | **Status** | Reserved — real-world venue not yet confirmed |
 
 ### Reserved — The Crossing
@@ -215,11 +215,9 @@ SE_ALERTS_OVERLAY_ID=your_alerts_overlay_id
 
 Test nodes are real infrastructure used for development and QA. They are **never** referenced in Chronicles or in-world broadcasts. They exist in the technical layer only.
 
-| Designation | Purpose | Dead Name | Lore Reference |
-|---|---|---|---|
-| **6-G1-TEST** | Ron's personal dev/test server | San Jose, CA | In-world this location is known as **Grid 9-Foxtrot** — a pre-collapse communications relay 34km NE of the Oasis, deliberately decommissioned, now within The Covenant's active search pattern. The lore and the infrastructure are separate. |
+*No active test node designations. The former 6-G1-TEST designation has been retired — 6-G1 is now assigned to Haven.*
 
-**Standing rule:** `6-G1-TEST` is never mentioned in Chronicles. `Grid 9-Foxtrot` is never used as a real infrastructure designation. They occupy the same geography in opposite layers of reality.
+**Standing rule:** Test nodes are never mentioned in Chronicles and never used as live grid designations. They exist in the technical layer only.
 
 ---
 
@@ -304,7 +302,7 @@ The operator receives:
 - Setup instructions from the README
 
 ### Step 5 — Test Broadcast
-The operator runs a test broadcast using `6-G1-TEST` protocols — not their live grid designation — until technical setup is verified.
+The operator runs a test broadcast using a designated test node — never their live grid designation — until technical setup is verified. See Section VI for current test node designations.
 
 ### Step 6 — Activation
 Once the test broadcast passes, the Settlement status is updated to **Active** in the Canon registry. Their grid designation goes live. They are on the MESH.
