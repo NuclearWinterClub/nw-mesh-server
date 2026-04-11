@@ -4,7 +4,8 @@
   "description": "Nuclear Winter MESH Update Bar — WebSocket server + Discord bot",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev":   "node -e \"require('dotenv').config({path:'.env.dev'}); require('./server.js')\""
   },
   "dependencies": {
     "discord.js": "^14.14.1",
