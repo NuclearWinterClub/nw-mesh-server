@@ -25,8 +25,10 @@
  * Column order doesn't matter — headers are matched by name.
  */
 
-const SHEET_NAME = 'Characters';
+const SHEET_NAME        = 'Characters';
+const REGISTRATIONS_TAB = 'Registrations';
 
+// ── GET: return Characters tab as JSON ──────────────────────────────
 function doGet(e) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -74,6 +76,43 @@ function doGet(e) {
 
   } catch (err) {
     return jsonResponse({ error: err.message }, 500);
+  }
+}
+
+// ── POST: receive survivor registration, write to Registrations tab ─
+function doPost(e) {
+  try {
+    const payload = JSON.parse(e.postData.contents);
+    const ss      = SpreadsheetApp.getActiveSpreadsheet();
+
+    // Get or create the Registrations sheet
+    let sheet = ss.getSheetByName(REGISTRATIONS_TAB);
+    if (!sheet) {
+      sheet = ss.insertSheet(REGISTRATIONS_TAB);
+      sheet.appendRow([
+        'Timestamp', 'Handle', 'Email', 'Origin',
+        'Brought', 'Roles', 'Source', 'Notes', 'Review Status'
+      ]);
+      // Freeze header row
+      sheet.setFrozenRows(1);
+    }
+
+    sheet.appendRow([
+      new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+      payload.handle  || '',
+      payload.email   || '',
+      payload.origin  || '',
+      payload.brought || '',
+      Array.isArray(payload.roles) ? payload.roles.join(', ') : (payload.roles || ''),
+      payload.source  || '',
+      payload.notes   || '',
+      'Pending'
+    ]);
+
+    return jsonResponse({ success: true });
+
+  } catch (err) {
+    return jsonResponse({ success: false, error: err.message });
   }
 }
 
