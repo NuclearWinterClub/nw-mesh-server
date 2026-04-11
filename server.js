@@ -5,11 +5,13 @@ const express = require('express');
 const http = require('http');
 
 const CONFIG = {
-  PORT: 3001,
-  HTTP_PORT: 3002,
-  DISCORD_TOKEN: process.env.DISCORD_TOKEN,
-  DISCORD_CHANNEL: 'oasis-broadcast',
-  STREAM_KEY: process.env.STREAM_KEY,
+  PORT:             parseInt(process.env.MESH_PORT)      || 3001,
+  HTTP_PORT:        parseInt(process.env.MESH_HTTP_PORT) || 3002,
+  DISCORD_TOKEN:    process.env.DISCORD_TOKEN,
+  DISCORD_CHANNEL:  process.env.DISCORD_CHANNEL         || 'oasis-broadcast',
+  STREAM_KEY:       process.env.STREAM_KEY,
+  SETTLEMENT_NAME:  process.env.SETTLEMENT_NAME          || 'The Oasis',
+  SETTLEMENT_GRID:  process.env.SETTLEMENT_GRID          || '6-F1',
 };
 
 const CATEGORIES = {
@@ -17,7 +19,7 @@ const CATEGORIES = {
   covenant:  { label: 'MESH // COVENANT',      priority: 'high' },
   resource:  { label: 'MESH // RESOURCE',      priority: 'low'  },
   community: { label: 'MESH // COMMUNITY',     priority: 'low'  },
-  oasis:     { label: 'OASIS // TRANSMISSION', priority: 'low'  },
+  oasis:     { label: `${process.env.SETTLEMENT_NAME || 'OASIS'} // TRANSMISSION`, priority: 'low'  },
   survivor:  { label: 'MESH // SURVIVOR',      priority: 'low'  },
   alert:     { label: 'MESH // ALERT',         priority: 'high' },
 };
@@ -133,11 +135,13 @@ discord.on(Events.Error, (err) => console.error('[DISCORD] Error:', err.message)
 discord.login(CONFIG.DISCORD_TOKEN).catch(err => console.error('[DISCORD] Login failed:', err.message));
 
 console.log('');
+console.log('');
 console.log('☢  NUCLEAR WINTER — MESH SERVER');
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-console.log(`   WebSocket : ws://localhost:${CONFIG.PORT}`);
-console.log(`   HTTP      : http://localhost:${CONFIG.HTTP_PORT}`);
-console.log(`   Discord   : #${CONFIG.DISCORD_CHANNEL}`);
+console.log(`   Settlement : ${CONFIG.SETTLEMENT_NAME} [${CONFIG.SETTLEMENT_GRID}]`);
+console.log(`   WebSocket  : ws://localhost:${CONFIG.PORT}`);
+console.log(`   HTTP       : http://localhost:${CONFIG.HTTP_PORT}`);
+console.log(`   Discord    : #${CONFIG.DISCORD_CHANNEL}`);
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-console.log('   Signal active. Oasis broadcasting.');
+console.log(`   Signal active. ${CONFIG.SETTLEMENT_NAME} broadcasting.`);
 console.log('');
