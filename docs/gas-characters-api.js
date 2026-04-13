@@ -79,41 +79,72 @@ function doGet(e) {
   }
 }
 
-// ── POST: receive survivor registration, write to Registrations tab ─
+// ── POST: route by action field ──────────────────────────────────────
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
-    const ss      = SpreadsheetApp.getActiveSpreadsheet();
-
-    // Get or create the Registrations sheet
-    let sheet = ss.getSheetByName(REGISTRATIONS_TAB);
-    if (!sheet) {
-      sheet = ss.insertSheet(REGISTRATIONS_TAB);
-      sheet.appendRow([
-        'Timestamp', 'Handle', 'Email', 'Origin',
-        'Brought', 'Roles', 'Source', 'Notes', 'Review Status'
-      ]);
-      // Freeze header row
-      sheet.setFrozenRows(1);
-    }
-
-    sheet.appendRow([
-      new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
-      payload.handle  || '',
-      payload.email   || '',
-      payload.origin  || '',
-      payload.brought || '',
-      Array.isArray(payload.roles) ? payload.roles.join(', ') : (payload.roles || ''),
-      payload.source  || '',
-      payload.notes   || '',
-      'Pending'
-    ]);
-
-    return jsonResponse({ success: true });
-
+    if (payload.action === 'log_fragment') return logFragment(payload);
+    return handleRegistration(payload);
   } catch (err) {
     return jsonResponse({ success: false, error: err.message });
   }
+}
+
+// ── Fragment log: write to per-Settlement tab ────────────────────────
+function logFragment(payload) {
+  const ss      = SpreadsheetApp.getActiveSpreadsheet();
+  const tabName = payload.grid || payload.settlement || 'MESH Log';
+  let   sheet   = ss.getSheetByName(tabName);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(tabName);
+    sheet.appendRow(['ID', 'Content', 'Cycle', 'Date', 'Status', 'Type', 'Title']);
+    sheet.setFrozenRows(1);
+  }
+
+  // Cycle number: data rows already present (excluding header), zero-padded to 3 digits
+  const cycle = String(Math.max(sheet.getLastRow() - 1, 0) + 1).padStart(3, '0');
+
+  sheet.appendRow([
+    '',
+    payload.body       || '',
+    cycle,
+    payload.timestamp  || new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+    payload.header     || '',
+    payload.priority   || '',
+    payload.cat        || '',
+  ]);
+
+  return jsonResponse({ success: true });
+}
+
+// ── Survivor registration: write to Registrations tab ───────────────
+function handleRegistration(payload) {
+  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  let   sheet = ss.getSheetByName(REGISTRATIONS_TAB);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(REGISTRATIONS_TAB);
+    sheet.appendRow([
+      'Timestamp', 'Handle', 'Email', 'Origin',
+      'Brought', 'Roles', 'Source', 'Notes', 'Review Status'
+    ]);
+    sheet.setFrozenRows(1);
+  }
+
+  sheet.appendRow([
+    new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+    payload.handle  || '',
+    payload.email   || '',
+    payload.origin  || '',
+    payload.brought || '',
+    Array.isArray(payload.roles) ? payload.roles.join(', ') : (payload.roles || ''),
+    payload.source  || '',
+    payload.notes   || '',
+    'Pending'
+  ]);
+
+  return jsonResponse({ success: true });
 }
 
 function jsonResponse(data, statusCode) {
