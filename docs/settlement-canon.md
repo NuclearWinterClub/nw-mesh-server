@@ -193,11 +193,11 @@ SE_ALERTS_OVERLAY_ID=your_alerts_overlay_id
 | **Dead Name** | TBD |
 | **Status** | Reserved — real-world venue not yet confirmed |
 
-### Reserved — Haven
+### Reserved — Raven
 | Field | Value |
 |---|---|
 | **Grid** | 6-G1 |
-| **Settlement Name** | Haven |
+| **Settlement Name** | Raven |
 | **Dead Name** | San Jose, CA |
 | **Status** | Reserved — real-world venue not yet confirmed |
 
@@ -215,7 +215,7 @@ SE_ALERTS_OVERLAY_ID=your_alerts_overlay_id
 
 Test nodes are real infrastructure used for development and QA. They are **never** referenced in Chronicles or in-world broadcasts. They exist in the technical layer only.
 
-*No active test node designations. The former 6-G1-TEST designation has been retired — 6-G1 is now assigned to Haven.*
+*Active dev node: 6-G1-DEV — Raven Dev (San Jose, CA). Used for local development and QA against the Raven settlement infrastructure. The former 6-G1-TEST designation has been retired.*
 
 **Standing rule:** Test nodes are never mentioned in Chronicles and never used as live grid designations. They exist in the technical layer only.
 

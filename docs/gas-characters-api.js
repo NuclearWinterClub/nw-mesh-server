@@ -98,21 +98,29 @@ function logFragment(payload) {
 
   if (!sheet) {
     sheet = ss.insertSheet(tabName);
-    sheet.appendRow(['ID', 'Content', 'Cycle', 'Date', 'Status', 'Type', 'Title']);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(['ID', 'Settlement', 'Date', 'Cycle', 'Grid', 'Type', 'Title', 'Content', 'Priority', 'Operator', 'Status']);
     sheet.setFrozenRows(1);
   }
 
-  // Cycle number: data rows already present (excluding header), zero-padded to 3 digits
-  const cycle = String(Math.max(sheet.getLastRow() - 1, 0) + 1).padStart(3, '0');
+  // Cycle number: weeks elapsed since Cycle 1 (March 25, 2025), zero-padded to 3 digits
+  const CYCLE_ONE = new Date('2025-03-25T07:00:00Z'); // March 25, 2025 00:00 PDT
+  const weeksSinceStart = Math.floor((new Date() - CYCLE_ONE) / (7 * 24 * 60 * 60 * 1000));
+  const cycle = String(weeksSinceStart + 1).padStart(3, '0');
 
   sheet.appendRow([
     '',
-    payload.body       || '',
-    cycle,
+    payload.settlement || '',
     payload.timestamp  || new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
-    payload.header     || '',
-    payload.priority   || '',
+    cycle,
+    payload.grid       || '',
     payload.cat        || '',
+    payload.header     || '',
+    payload.body       || '',
+    payload.priority   || '',
+    payload.operator   || '',
+    '',
   ]);
 
   return jsonResponse({ success: true });
