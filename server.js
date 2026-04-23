@@ -3,6 +3,12 @@ const { WebSocketServer } = require('ws');
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 const express = require('express');
 const http = require('http');
+const fs   = require('fs');
+const os   = require('os');
+const path = require('path');
+
+const SD_LABEL_DIR = path.join(os.homedir(), 'StreamDeckLabels');
+fs.mkdirSync(SD_LABEL_DIR, { recursive: true });
 
 const CONFIG = {
   PORT:             parseInt(process.env.MESH_PORT)      || 3001,
@@ -116,6 +122,20 @@ app.post('/survivor', (req, res) => {
   if (!username || !message) return res.status(400).json({ error: 'Missing fields' });
   broadcast({ cat: 'survivor', label: 'MESH // SURVIVOR', header: username.toUpperCase(), body: message.substring(0, 200), priority: 'low', duration: 15000 });
   res.json({ ok: true });
+});
+
+app.post('/write-label', (req, res) => {
+  try {
+    const { slotId, alias } = req.body;
+    if (!slotId) return res.status(400).json({ ok: false, error: 'missing slotId' });
+    const safeName = String(slotId).replace(/[^a-zA-Z0-9_\-:]/g, '_');
+    fs.writeFileSync(path.join(SD_LABEL_DIR, `${safeName}.txt`), alias || '');
+    console.log(`[SD] Label written: ${safeName} → "${alias || ''}"`);
+    res.json({ ok: true, slotId, alias });
+  } catch (err) {
+    console.warn(`[SD] write-label error: ${err.message}`);
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
 const httpServer = http.createServer(app);
